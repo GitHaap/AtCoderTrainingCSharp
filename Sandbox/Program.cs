@@ -1,12 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.IO;
+using System.Text;
+using System.Globalization;
 
 class Program
 {
 	static void Main(string[] args)
 	{
-		IO.Scanner ss = new IO.Scanner(Console.OpenStandardInput());
+		Scanner ss = new Scanner(Console.OpenStandardInput());
 		var a = ss.NextInt();
 		var b = ss.NextInt();
 		var c = ss.NextInt();
@@ -14,14 +17,6 @@ class Program
 
 		Console.WriteLine((a + b + c) + " " + s);
 	}
-}
-
-
-namespace IO
-{
-	using System.IO;
-	using System.Text;
-	using System.Globalization;
 
 	/// <summary>
 	/// javaのscannerクラスインスパイア
