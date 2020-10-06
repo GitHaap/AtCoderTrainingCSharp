@@ -9,12 +9,15 @@ class Program
 {
 	static void Main(string[] args)
 	{
+
+		// TODO: ここに回答を書いていきます
+
+		// 一例
 		Scanner ss = new Scanner(Console.OpenStandardInput());
 		var a = ss.NextInt();
 		var b = ss.NextInt();
 		var c = ss.NextInt();
 		var s = ss.NextWord();
-
 		Console.WriteLine((a + b + c) + " " + s);
 	}
 
