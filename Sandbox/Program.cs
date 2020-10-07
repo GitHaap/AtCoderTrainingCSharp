@@ -21,6 +21,7 @@ class Program
 		Console.WriteLine((a + b + c) + " " + s);
 	}
 
+	#region Scanner
 	/// <summary>
 	/// javaのscannerクラスインスパイア
 	/// </summary>
@@ -103,4 +104,5 @@ class Program
 		/// <summary>N個のLong値を取得します</summary>
 		public long[] NextLongs(int n) { return enumerate(n, NextLong); }
 	}
+	#endregion
 }
