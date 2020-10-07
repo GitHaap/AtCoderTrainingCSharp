@@ -7,28 +7,21 @@ using System.Globalization;
 
 namespace AtCoderAnswer
 {
-	class ABC085COtoshidama
+	class ABC085B_KagamiMochi
 	{
 		static void Main(string[] args)
 		{
 			Scanner ss = new Scanner(Console.OpenStandardInput());
 			int n = ss.NextInt();
-			long y = ss.NextLong();
 
-			// HACK: 連立方程式で解いたけど今回の制約的に単純に2重forくらいで解いても大丈夫だったかも
-
-			for (int a = 0; a <= n; a++)
+			var mochis = new HashSet<int>();
+			for (int i = 0; i < n; i++)
 			{
-				int c = (int)(((10000L * a) + (5000L * (n - a)) - y) / 4000);
-				int b = n - a - c;
-				long sum = (a * 10000L) + (b * 5000L) + (c * 1000L);
-				if (sum == y && b >= 0 && c >= 0)
-				{
-					Console.WriteLine($"{a} {b} {c}");
-					return;
-				}
+				int d = ss.NextInt();
+				mochis.Add(d);
 			}
-			Console.WriteLine($"-1 -1 -1");
+
+			Console.WriteLine($"{ mochis.Count}");
 		}
 
 		/// <summary>
