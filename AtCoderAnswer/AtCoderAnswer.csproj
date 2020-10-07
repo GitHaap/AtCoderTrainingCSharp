@@ -3,7 +3,7 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <StartupObject>AtCoderAnswer.ABC085C_Otoshidama</StartupObject>
+    <StartupObject>AtCoderAnswer.ABC049C_白昼夢</StartupObject>
   </PropertyGroup>
 
 </Project>
