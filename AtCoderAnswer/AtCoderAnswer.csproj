@@ -3,7 +3,7 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <StartupObject>AtCoderAnswer.EDPC_D_Knapsack1</StartupObject>
+    <StartupObject>AtCoderAnswer.ABC180.D_Takahashi_Unevolved</StartupObject>
   </PropertyGroup>
 
 </Project>

@@ -20,6 +20,7 @@ namespace AtCoderAnswer.ABC180
 			ulong str = x;
 			ulong exp = 0;
 
+			//HACK: A倍の部分は全探索も間に合ったぽい
 			// Bが選択された時点で以降Bが勝つので、Xを何回A倍すればBを上回るかを求める
 			double na = Math.Ceiling(Math.Log((double)b / x, (double)a));
 			double ny = Math.Ceiling(Math.Log((double)y / x, (double)a));
