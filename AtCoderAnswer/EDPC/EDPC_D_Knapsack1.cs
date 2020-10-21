@@ -5,9 +5,9 @@ using System.IO;
 using System.Text;
 using System.Globalization;
 
-namespace AtCoderAnswer
+namespace AtCoderAnswer.EDPC
 {
-	class EDPC_D_Knapsack1
+	class EDPC_E_Knapsack1
 	{
 		static void Main(string[] args)
 		{
@@ -15,7 +15,8 @@ namespace AtCoderAnswer
 			int n = ss.NextInt();
 			int w = ss.NextInt();
 
-			UInt64[,] dp = new UInt64[n, w + 1];
+			// ピック回数、ウェイト、バリュー
+			Dictionary<int, Dictionary<int, UInt64>> dp = new Dictionary<int, Dictionary<int, UInt64>>();
 
 			List<(int w, int v)> items = new List<(int, int)>();
 			for (int i = 0; i < n; i++)
@@ -23,47 +24,55 @@ namespace AtCoderAnswer
 				items.Add((ss.NextInt(), ss.NextInt()));
 			}
 
+			UInt64 maxValue = 0;
 			for (int i = 0; i < n; i++)
 			{
 				int weight = items[i].w;
 				int value = items[i].v;
 
-				for (int j = 0; j < w + 1; j++)
+				dp[i] = new Dictionary<int, UInt64>();
+				// なにも入らないときの価値
+				dp[i][0] = 0;
+
+				int prevIndex = i - 1;
+				if (0 <= prevIndex)
 				{
-					int prevIndex = i - 1;
-					if (0 <= prevIndex)
+					// 前のインデックスに入っているものを総なめする
+					foreach (var item in dp[prevIndex])
 					{
-						// まずこのアイテムを袋に入れなかった場合の価値
-						UInt64 noItemValue = dp[prevIndex, j];
+						int prevWeight = item.Key;
+						UInt64 prevValue = item.Value;
+
+						// このアイテム入れなかった場合の価値
+						dp[i].TryGetValue(prevWeight, out ulong curVal);
+						dp[i][prevWeight] = Math.Max(curVal, prevValue);
+
+						maxValue = Math.Max(maxValue, dp[i][prevWeight]);
 
 						// 1個前の状態からその重さになるようにこのアイテムを入れた場合の価値
-						UInt64 inItemValue = 0;
-						int prevWeight = j - weight;
-						// 1個前が重さ0、もしくはすでにアイテムが入っている場合のみ
-						if (prevWeight == 0 || (0 <= prevWeight && dp[prevIndex, prevWeight] != 0))
+						int nextWeight = prevWeight + weight;
+						// 重量超過したら次
+						if (w < nextWeight)
 						{
-							inItemValue = dp[prevIndex, prevWeight] + (UInt64)value;
+							continue;
 						}
+						UInt64 inItemValue = prevValue + (UInt64)value;
+						dp[prevIndex].TryGetValue(nextWeight, out ulong currentVal);
+						dp[i][nextWeight] = Math.Max(currentVal, inItemValue);
 
-						// 大きいほうを採用
-						dp[i, j] = Math.Max(noItemValue, inItemValue);
+						maxValue = Math.Max(maxValue, dp[i][nextWeight]);
 					}
-					else
-					{
-						// 0→その重さになるときの価値
-						if (j == weight)
-						{
-							dp[i, j] = Math.Max(dp[i, j], (UInt64)value);
-						}
-					}
+				}
+				else
+				{
+					// 0→その重さになるときの価値
+					dp[i].TryGetValue(weight, out ulong currentVal);
+					dp[i][weight] = Math.Max(currentVal, (UInt64)value);
+
+					maxValue = Math.Max(maxValue, dp[i][weight]);
 				}
 			}
 
-			UInt64 maxValue = 0;
-			for (int j = 0; j < w + 1; j++)
-			{
-				maxValue = Math.Max(maxValue, dp[n - 1, j]);
-			}
 			Console.WriteLine(maxValue);
 		}
 
