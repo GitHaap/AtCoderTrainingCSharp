@@ -3,7 +3,7 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <StartupObject>AtCoderAnswer.AGC048.A_atcoder_S</StartupObject>
+    <StartupObject>AtCoderAnswer.EDPC.EDPC_E_Knapsack2</StartupObject>
   </PropertyGroup>
 
 </Project>
