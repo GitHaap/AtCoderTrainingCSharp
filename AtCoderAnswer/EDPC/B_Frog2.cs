@@ -5,86 +5,43 @@ using System.IO;
 using System.Text;
 using System.Globalization;
 
-namespace AtCoderAnswer.EDPC
+namespace AtCoderAnswer
 {
-	class EDPC_E_Knapsack2
+	class B_Frog2
 	{
 		static void Main(string[] args)
 		{
 			Scanner ss = new Scanner(Console.OpenStandardInput());
 			int n = ss.NextInt();
-			int w = ss.NextInt();
+			int k = ss.NextInt();
 
-			// ナップサック1と逆で、その価値になるときの最小の重さを見ればいい
-			// ピック回数、バリュー、ウェイト
-			Dictionary<int, Dictionary<UInt64, UInt64>> dp = new Dictionary<int, Dictionary<UInt64, UInt64>>();
+			int[] costs = ss.NextInts(n);
 
-			List<(UInt64 w, UInt64 v)> items = new List<(UInt64, UInt64)>();
-			for (int i = 0; i < n; i++)
+			// 該当地点までの最小コストを保持する配列
+			int[] dp = Enumerable.Repeat(0, n).ToArray();
+			for (int i = 0; i < dp.Length; i++)
 			{
-				items.Add(((UInt64)ss.NextLong(), (UInt64)ss.NextLong()));
-			}
-
-			UInt64 maxValue = 0;
-			for (int i = 0; i < n; i++)
-			{
-				UInt64 weight = items[i].w;
-				UInt64 value = items[i].v;
-
-				dp[i] = new Dictionary<UInt64, UInt64>();
-				// なにも入らないときの重さ
-				dp[i][0] = 0;
-
-				int prevIndex = i - 1;
-				if (0 <= prevIndex)
+				int cost = int.MaxValue;
+				for (int j = 1; j <= k; j++)
 				{
-					// 前のインデックスに入っているものを総なめする
-					foreach (var item in dp[prevIndex])
+					// j個前の足場からジャンプした場合のコスト
+					if (0 <= i - j)
 					{
-						UInt64 prevValue = item.Key;
-						UInt64 prevWeight = item.Value;
-
-						// このアイテム入れなかった場合の重さ
-						bool exist = dp[i].TryGetValue(prevValue, out ulong curWeight);
-						if (exist)
+						int jumpcost = dp[i - j] + Math.Abs(costs[i] - costs[i - j]);
+						if (cost > jumpcost)
 						{
-							dp[i][prevValue] = Math.Min(curWeight, prevWeight);
+							cost = jumpcost;
 						}
-						else
-						{
-							dp[i][prevValue] = prevWeight;
-						}
-						maxValue = Math.Max(maxValue, prevValue);
-
-						// 1個前の状態からその価値になるようにこのアイテムを入れた場合の重さ
-						UInt64 nextValue = prevValue + value;
-						UInt64 inItemWeight = prevWeight + weight;
-						// 重量超過したら次
-						if ((ulong)w < inItemWeight)
-						{
-							continue;
-						}
-						exist = dp[prevIndex].TryGetValue(nextValue, out ulong currentWeight);
-						if (exist)
-						{
-							dp[i][nextValue] = Math.Min(currentWeight, inItemWeight);
-						}
-						else
-						{
-							dp[i][nextValue] = inItemWeight;
-						}
-						maxValue = Math.Max(maxValue, nextValue);
 					}
 				}
-				else
+				// 最小コスト確定
+				if (cost != int.MaxValue)
 				{
-					// 0→その価値になるときの重さ
-					dp[i][value] = weight;
-					maxValue = Math.Max(maxValue, value);
+					dp[i] = cost;
 				}
 			}
 
-			Console.WriteLine(maxValue);
+			Console.WriteLine(dp.Last());
 		}
 
 		#region Scanner

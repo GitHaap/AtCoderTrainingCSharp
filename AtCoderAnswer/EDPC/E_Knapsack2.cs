@@ -5,45 +5,86 @@ using System.IO;
 using System.Text;
 using System.Globalization;
 
-namespace AtCoderAnswer
+namespace AtCoderAnswer.EDPC
 {
-	class EDPC_C_Vacation
+	class E_Knapsack2
 	{
 		static void Main(string[] args)
 		{
 			Scanner ss = new Scanner(Console.OpenStandardInput());
 			int n = ss.NextInt();
+			int w = ss.NextInt();
 
-			// 該当地点までの最小コストを保持する配列
-			int[,] dp = new int[3, n];
+			// ナップサック1と逆で、その価値になるときの最小の重さを見ればいい
+			// ピック回数、バリュー、ウェイト
+			Dictionary<int, Dictionary<UInt64, UInt64>> dp = new Dictionary<int, Dictionary<UInt64, UInt64>>();
+
+			List<(UInt64 w, UInt64 v)> items = new List<(UInt64, UInt64)>();
 			for (int i = 0; i < n; i++)
 			{
-				int[] happys = ss.NextInts(3);
+				items.Add(((UInt64)ss.NextLong(), (UInt64)ss.NextLong()));
+			}
 
-				for (int j = 0; j < 3; j++)
+			UInt64 maxValue = 0;
+			for (int i = 0; i < n; i++)
+			{
+				UInt64 weight = items[i].w;
+				UInt64 value = items[i].v;
+
+				dp[i] = new Dictionary<UInt64, UInt64>();
+				// なにも入らないときの重さ
+				dp[i][0] = 0;
+
+				int prevIndex = i - 1;
+				if (0 <= prevIndex)
 				{
-					dp[j, i] = happys[j];
-
-					if (0 <= i - 1)
+					// 前のインデックスに入っているものを総なめする
+					foreach (var item in dp[prevIndex])
 					{
-						// 1日前の最大値を加算する
-						switch (j)
+						UInt64 prevValue = item.Key;
+						UInt64 prevWeight = item.Value;
+
+						// このアイテム入れなかった場合の重さ
+						bool exist = dp[i].TryGetValue(prevValue, out ulong curWeight);
+						if (exist)
 						{
-							case 0:
-								dp[j, i] += Math.Max(dp[1, i - 1], dp[2, i - 1]);
-								break;
-							case 1:
-								dp[j, i] += Math.Max(dp[0, i - 1], dp[2, i - 1]);
-								break;
-							case 2:
-								dp[j, i] += Math.Max(dp[0, i - 1], dp[1, i - 1]);
-								break;
+							dp[i][prevValue] = Math.Min(curWeight, prevWeight);
 						}
+						else
+						{
+							dp[i][prevValue] = prevWeight;
+						}
+						maxValue = Math.Max(maxValue, prevValue);
+
+						// 1個前の状態からその価値になるようにこのアイテムを入れた場合の重さ
+						UInt64 nextValue = prevValue + value;
+						UInt64 inItemWeight = prevWeight + weight;
+						// 重量超過したら次
+						if ((ulong)w < inItemWeight)
+						{
+							continue;
+						}
+						exist = dp[prevIndex].TryGetValue(nextValue, out ulong currentWeight);
+						if (exist)
+						{
+							dp[i][nextValue] = Math.Min(currentWeight, inItemWeight);
+						}
+						else
+						{
+							dp[i][nextValue] = inItemWeight;
+						}
+						maxValue = Math.Max(maxValue, nextValue);
 					}
+				}
+				else
+				{
+					// 0→その価値になるときの重さ
+					dp[i][value] = weight;
+					maxValue = Math.Max(maxValue, value);
 				}
 			}
 
-			Console.WriteLine(Math.Max(Math.Max(dp[0, n - 1], dp[1, n - 1]), dp[2, n - 1]));
+			Console.WriteLine(maxValue);
 		}
 
 		#region Scanner

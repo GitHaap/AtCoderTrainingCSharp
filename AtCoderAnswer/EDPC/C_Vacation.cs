@@ -7,41 +7,43 @@ using System.Globalization;
 
 namespace AtCoderAnswer
 {
-	class EDPC_B_Frog2
+	class C_Vacation
 	{
 		static void Main(string[] args)
 		{
 			Scanner ss = new Scanner(Console.OpenStandardInput());
 			int n = ss.NextInt();
-			int k = ss.NextInt();
-
-			int[] costs = ss.NextInts(n);
 
 			// 該当地点までの最小コストを保持する配列
-			int[] dp = Enumerable.Repeat(0, n).ToArray();
-			for (int i = 0; i < dp.Length; i++)
+			int[,] dp = new int[3, n];
+			for (int i = 0; i < n; i++)
 			{
-				int cost = int.MaxValue;
-				for (int j = 1; j <= k; j++)
+				int[] happys = ss.NextInts(3);
+
+				for (int j = 0; j < 3; j++)
 				{
-					// j個前の足場からジャンプした場合のコスト
-					if (0 <= i - j)
+					dp[j, i] = happys[j];
+
+					if (0 <= i - 1)
 					{
-						int jumpcost = dp[i - j] + Math.Abs(costs[i] - costs[i - j]);
-						if (cost > jumpcost)
+						// 1日前の最大値を加算する
+						switch (j)
 						{
-							cost = jumpcost;
+							case 0:
+								dp[j, i] += Math.Max(dp[1, i - 1], dp[2, i - 1]);
+								break;
+							case 1:
+								dp[j, i] += Math.Max(dp[0, i - 1], dp[2, i - 1]);
+								break;
+							case 2:
+								dp[j, i] += Math.Max(dp[0, i - 1], dp[1, i - 1]);
+								break;
 						}
 					}
 				}
-				// 最小コスト確定
-				if (cost != int.MaxValue)
-				{
-					dp[i] = cost;
-				}
 			}
 
-			Console.WriteLine(dp.Last());
+			Console.WriteLine(Math.Max(Math.Max(dp[0, n - 1], dp[1, n - 1]), dp[2, n - 1]));
 		}
 
 		#region Scanner

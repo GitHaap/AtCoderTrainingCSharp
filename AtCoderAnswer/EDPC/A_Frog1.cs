@@ -7,7 +7,7 @@ using System.Globalization;
 
 namespace AtCoderAnswer
 {
-	class EDPC_A_Frog1
+	class A_Frog1
 	{
 		static void Main(string[] args)
 		{
