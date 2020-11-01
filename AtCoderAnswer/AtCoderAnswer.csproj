@@ -3,7 +3,7 @@
   <PropertyGroup>
     <OutputType>Exe</OutputType>
     <TargetFramework>netcoreapp3.1</TargetFramework>
-    <StartupObject>AtCoderAnswer.EDPC.EDPC_E_Knapsack2</StartupObject>
+    <StartupObject>AtCoderAnswer.ABC181.C_Collinearity</StartupObject>
   </PropertyGroup>
 
 </Project>
